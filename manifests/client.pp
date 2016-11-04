@@ -412,17 +412,17 @@ class backuppc::client (
       user    => $system_account,
       require => File["${system_home_directory}/.ssh"]
     }
-  }
-
-  if $::fqdn != $backuppc_hostname {
-    @@sshkey { $::fqdn:
-      ensure => $ensure,
-      type   => 'ssh-rsa',
-      key    => $::sshrsakey,
-      tag    => "backuppc_sshkeys_${backuppc_hostname}",
+  
+    if $::fqdn != $backuppc_hostname {
+      @@sshkey { $::fqdn:
+        ensure => $ensure,
+        type   => 'ssh-rsa',
+        key    => $::sshrsakey,
+        tag    => "backuppc_sshkeys_${backuppc_hostname}",
+      }
     }
   }
-
+  
   @@file_line { "backuppc_host_${::fqdn}":
     ensure => $ensure,
     path   => $backuppc::params::hosts,
